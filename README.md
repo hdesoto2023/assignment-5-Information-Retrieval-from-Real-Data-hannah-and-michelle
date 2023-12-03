@@ -1,5 +1,3 @@
-# assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle
-
 # Assignment-5-Information-Retrieval-from-Real-Data
 
 ## Project Overview
