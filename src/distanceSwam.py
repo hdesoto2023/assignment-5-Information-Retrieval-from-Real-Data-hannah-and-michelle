@@ -50,6 +50,8 @@ def process_yards_per_month(data):
 # File path
 file_path = "/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/HDhealthdata.json"
 
+
+
 # Read data from the file
 with open(file_path, "r") as file:
     # Read lines and parse JSON
