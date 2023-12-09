@@ -1,5 +1,4 @@
-energyBurned.tail(10)
-#%%
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
@@ -80,6 +79,50 @@ class HeartRateAnalyzer:
         plt.title('Resting Heart Rate Prediction for the Next 20 Years')
         plt.legend()
         plt.show()
+
+class WorkoutDataClusterer:
+    def __init__(self, file_path):
+        self.df = pd.read_csv(file_path)
+        self.features = None
+        self.features_standardized = None
+        self.kmeans = None
+
+    def preprocess_data(self):
+        # convert timestamps to datetime objects
+        self.df['startDate'] = pd.to_datetime(self.df['startDate'])
+        self.df['endDate'] = pd.to_datetime(self.df['endDate'])
+
+        # Extract month and year information
+        self.df['month'] = self.df['startDate'].dt.month
+        self.df['year'] = self.df['startDate'].dt.year
+
+        self.df['duration'] = (self.df['endDate'] - self.df['startDate']).dt.total_seconds() / 60
+
+    def cluster_data(self, num_clusters=3):
+        self.features = self.df[['year', 'month', 'duration']]
+        scaler = StandardScaler()
+        self.features_standardized = scaler.fit_transform(self.features)
+
+        self.kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+        self.df['cluster'] = self.kmeans.fit_predict(self.features_standardized)
+
+    def visualize_clusters(self):
+        # Plot the clusters
+        plt.scatter(self.df['startDate'], self.df['duration'], c=self.df['cluster'], cmap='viridis')
+        plt.xlabel('Date')
+        plt.ylabel('Workout Duration (min)')
+        plt.title('Workout Duration Clusters Over Time')
+        plt.show()
+
+# Provide the file path to your workout data CSV file
+workout_file_path = '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/Workout.csv'
+# Create an instance of WorkoutDataClusterer
+workout_clusterer = WorkoutDataClusterer(workout_file_path)
+
+# Perform clustering
+workout_clusterer.preprocess_data()
+workout_clusterer.cluster_data()
+workout_clusterer.visualize_clusters()
 
 # Provide the file path to your CSV file
 file_path = '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv'
