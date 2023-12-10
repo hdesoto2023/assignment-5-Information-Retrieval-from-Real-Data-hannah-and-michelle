@@ -88,10 +88,10 @@ class RestingHeartRateAnalyzer:
             plt.show()
 
 if __name__ == "__main__":
-    output_file = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshOGmonthlyaverageHR'
-    forecast_file = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/meeshforecastHR.csv'
+    output_file = '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/HDAvgHR'
+    forecast_file = '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/HDForecastHR'
     analyzer = RestingHeartRateAnalyzer(
-        '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv')
+        '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv')
     analyzer.load_data()
     analyzer.preprocess_data()
     analyzer.plot_monthly_average()
