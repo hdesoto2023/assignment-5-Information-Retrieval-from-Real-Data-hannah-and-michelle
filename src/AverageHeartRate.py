@@ -36,7 +36,7 @@ class RestingHeartRateAnalyzer:
             plt.xticks(rotation=45)  # Rotate x-axis labels
             plt.show()
 
-    def forecast_next_24_months(self):
+    def forecast_next_24_months(self, output_file=None):
         if self.df is not None:
             monthly_average_hr = self.calculate_monthly_average()
             monthly_average_hr['month_year'] = pd.to_datetime(monthly_average_hr['month_year'])
@@ -55,6 +55,15 @@ class RestingHeartRateAnalyzer:
                 'value': forecast_values
             })
 
+            # Print the forecast to the terminal
+            print("Monthly Average Resting Heart Rate Forecast:")
+            print(forecast_df)
+
+            # Save the forecast to a CSV file
+            if output_file:
+                forecast_df.to_csv(output_file, index=False)
+                print(f"Forecast saved to {output_file}")
+
             # Plot the original data and the forecast
             plt.figure(figsize=(10, 6))
             plt.plot(monthly_average_hr['month_year'], monthly_average_hr['value'], marker='o', linestyle='-',
@@ -70,9 +79,11 @@ class RestingHeartRateAnalyzer:
             plt.show()
 
 
+
 if __name__ == "__main__":
+    output_file =
     analyzer = RestingHeartRateAnalyzer(
-        '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv')
+        '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv')
     analyzer.load_data()
     analyzer.preprocess_data()
     analyzer.plot_monthly_average()
