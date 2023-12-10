@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
+import xmltodict
 
 class RestingHeartRatePredictor:
     def __init__(self, file_path):
@@ -93,13 +94,13 @@ class RestingHeartRatePredictor:
 
 
 # Provide the file path to your CSV file
-file_path = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/apple_health_export/export.xml'
+file_path = '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv'
 # Create an instance of RestingHeartRatePredictor
 predictor = RestingHeartRatePredictor(file_path)
 
 if __name__ == "__main__":
     # Replace 'RestingHeartRate.csv' with the actual path to your CSV file
-    file_path = 'RestingHeartRate.csv'
+    file_path = '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv'
 
     predictor = RestingHeartRatePredictor(file_path)
 
@@ -109,10 +110,6 @@ predictor.cluster_data()
 predictor.visualize_clusters()
 predictor.train_regression_model()
 predictor.predict_future_heart_rate()
-
-
-import xmltodict
-import pandas as pd
 
 def xml_to_csv(xml_file, csv_file):
     with open(xml_file, 'r') as f:
