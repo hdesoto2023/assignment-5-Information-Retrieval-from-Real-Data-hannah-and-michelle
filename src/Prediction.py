@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import xmltodatabase
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -50,6 +51,30 @@ class RestingHeartRatePredictor:
 
         mse = mean_squared_error(y_test, y_pred)
         print(f'Mean Squared Error: {mse}')
+
+    def analyze_resting_heart_rate_pattern(csv_file):
+        # Read CSV file into a DataFrame
+        df = pd.read_csv(csv_file)
+
+        # Convert 'Date' column to datetime
+        df['Date'] = pd.to_datetime(df['Date'])
+
+        # Extract month and year information
+        df['Month'] = df['Date'].dt.month
+        df['Year'] = df['Date'].dt.year
+
+        # Group by month and calculate the average resting heart rate
+        monthly_avg_heart_rate = df.groupby(['Year', 'Month'])['RestingHeartRate'].mean().reset_index()
+
+        # Plot the average resting heart rate by month
+        plt.figure(figsize=(10, 6))
+        plt.plot(monthly_avg_heart_rate['Month'], monthly_avg_heart_rate['RestingHeartRate'], marker='o')
+        plt.xlabel('Month')
+        plt.ylabel('Average Resting Heart Rate')
+        plt.title('Average Resting Heart Rate by Month')
+        plt.xticks(range(1, 13), ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+        plt.grid(True)
+        plt.show()
 
     def predict_future_heart_rate(self, num_years=2):
         # Group data by month and calculate the average resting heart rate
@@ -119,17 +144,26 @@ def xml_to_csv(xml_file, csv_file):
     data_list = data_dict['root']['record']
 
     # Convert to DataFrame
+
+def xml_to_dataframe(self, xml_file):
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+
+    # Extract data from XML and convert to DataFrame
+    data_list = []
+    for record in root.findall('.//record'):
+        data_list.append({
+            'creationDate': record.find('creationDate').text,
+            'value': float(record.find('value').text)
+        })
+
+
     df = pd.DataFrame(data_list)
 
-    try:
-        # Save DataFrame to CSV
-        df.to_csv(csv_file, index=False)
-    except ValueError as e:
-        print(f"Error: {e}")
-        print("Skipping lines with incorrect number of fields.")
-        # Skip lines with incorrect number of fields
-        df = df.dropna()  # Drop rows with missing values
-        df.to_csv(csv_file, index=False)
+    # Convert 'creationDate' to datetime
+    df['creationDate'] = pd.to_datetime(df['creationDate'])
+
+    return df
 
 if __name__ == "__main__":
     # Replace 'input.xml' with the path to your XML file
