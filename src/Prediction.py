@@ -1,175 +1,74 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import xmltodatabase
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from statsmodels.tsa.arima.model import ARIMA
 
-import xmltodict
+class RestingHeartRateAnalyzer:
 
-class RestingHeartRatePredictor:
     def __init__(self, file_path):
-        try:
-            self.df = pd.read_csv(file_path)
-        except pd.errors.ParserError:
-            print("Error reading CSV file. Skipping lines with incorrect number of fields.")
-            self.df = pd.read_csv(file_path, error_bad_lines=False)
+        self.file_path = file_path
+        self.df = None
+
+    def load_data(self):
+        self.df = pd.read_csv(self.file_path)
 
     def preprocess_data(self):
-        # Convert timestamps to datetime objects
-        self.df['creationDate'] = pd.to_datetime(self.df['creationDate'])
+        if self.df is not None:
+            self.df['endDate'] = pd.to_datetime(self.df['endDate'])
+            if self.df['endDate'].dt.tz is not None and self.df['endDate'].dt.tz == 'UTC':
+                self.df['endDate'] = self.df['endDate'].dt.tz_localize('UTC')
+            self.df['month_year'] = self.df['endDate'].dt.strftime('%Y-%m')
 
-        # Extract month and year information
-        self.df['month'] = self.df['creationDate'].dt.month
-        self.df['year'] = self.df['creationDate'].dt.year
+    def calculate_monthly_average(self):
+        if self.df is not None:
+            return self.df.groupby('month_year')['value'].mean().reset_index()
 
-    def cluster_data(self, num_clusters=3):
-        self.features = self.df[['value']]
-        scaler = StandardScaler()
-        self.features_standardized = scaler.fit_transform(self.features)
+    def save_monthly_average_to_file(self, output_file):
+        if self.df is not None:
+            monthly_average_hr = self.calculate_monthly_average()
+            monthly_average_hr.to_csv(output_file, index=False)
 
-        self.kmeans = KMeans(n_clusters=num_clusters, random_state=42)
-        self.df['cluster'] = self.kmeans.fit_predict(self.features_standardized)
+    def plot_monthly_average(self):
+        if self.df is not None:
+            monthly_average_hr = self.calculate_monthly_average()
+            plt.figure(figsize=(10, 6))
+            plt.plot(monthly_average_hr['month_year'], monthly_average_hr['value'], marker='o', linestyle='-', color='b')
+            plt.title('Monthly Average Resting Heart Rate')
+            plt.xlabel('Month')
+            plt.ylabel('Average Resting Heart Rate')
+            plt.grid(True)
+            plt.show()
 
-    def visualize_clusters(self):
-        plt.scatter(self.df['creationDate'], self.df['value'], c=self.df['cluster'], cmap='viridis')
-        plt.xlabel('Date')
-        plt.ylabel('Resting Heart Rate (count/min)')
-        plt.title('Resting Heart Rate Clusters Over Time')
-        plt.show()
+    def train_arima_model(self):
+        if self.df is not None:
+            # Assuming your 'value' column is the heart rate values
+            time_series = self.df.set_index('endDate')['value']
+            model = ARIMA(time_series, order=(1, 1, 1))  # Adjust order as needed
+            fit_model = model.fit()
+            return fit_model
 
-    def train_regression_model(self):
-        X_train, X_test, y_train, y_test = train_test_split(
-            self.df[['month', 'year', 'cluster']], self.df['value'], test_size=0.2, random_state=42
-        )
-        self.model = LinearRegression()
-        self.model.fit(X_train, y_train)
-
-        y_pred = self.model.predict(X_test)
-
-        mse = mean_squared_error(y_test, y_pred)
-        print(f'Mean Squared Error: {mse}')
-
-    def analyze_resting_heart_rate_pattern(csv_file):
-        # Read CSV file into a DataFrame
-        df = pd.read_csv(csv_file)
-
-        # Convert 'Date' column to datetime
-        df['Date'] = pd.to_datetime(df['Date'])
-
-        # Extract month and year information
-        df['Month'] = df['Date'].dt.month
-        df['Year'] = df['Date'].dt.year
-
-        # Group by month and calculate the average resting heart rate
-        monthly_avg_heart_rate = df.groupby(['Year', 'Month'])['RestingHeartRate'].mean().reset_index()
-
-        # Plot the average resting heart rate by month
-        plt.figure(figsize=(10, 6))
-        plt.plot(monthly_avg_heart_rate['Month'], monthly_avg_heart_rate['RestingHeartRate'], marker='o')
-        plt.xlabel('Month')
-        plt.ylabel('Average Resting Heart Rate')
-        plt.title('Average Resting Heart Rate by Month')
-        plt.xticks(range(1, 13), ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
-        plt.grid(True)
-        plt.show()
-
-    def predict_future_heart_rate(self, num_years=2):
-        # Group data by month and calculate the average resting heart rate
-        monthly_avg_heart_rate = self.df.groupby(['year', 'month'])['value'].mean().reset_index()
-
-        # Plot the average resting heart rate by month
-        plt.plot(monthly_avg_heart_rate['month'], monthly_avg_heart_rate['value'], marker='o')
-        plt.xlabel('Month')
-        plt.ylabel('Average Resting Heart Rate (count/min)')
-        plt.title('Average Resting Heart Rate by Month')
-        plt.show()
-
-        # Predict resting heart rate for the next 2 years
-        future_data = pd.DataFrame({
-            'month': range(1, 13) * num_years,
-            'year': [2022 + i for i in range(num_years)] * 12,
-            'cluster': self.kmeans.predict(self.features_standardized.mean(axis=0).reshape(1, -1))
-        })
-        future_predictions = self.model.predict(future_data[['month', 'year', 'cluster']])
-
-        # Group the future data by month and calculate the average resting heart rate
-        future_avg_heart_rate = future_data.groupby(['year', 'month'])['cluster'].count().reset_index()
-
-        # Print predicted averages for each month of the next two years
-        print("\nPredicted Monthly Heart Rate Averages for the Next 2 Years:")
-        for idx, row in future_avg_heart_rate.iterrows():
-            month_year = f"{int(row['year'])}-{int(row['month']):02d}"
-            predicted_value = future_predictions[idx]
-            print(f"{month_year}: {predicted_value}")
-
-        # Visualize predictions
-        plt.plot(self.df['creationDate'], self.df['value'], label='Actual Data', marker='o')
-        plt.plot(
-            future_avg_heart_rate['month'] + future_avg_heart_rate['year'] * 100,
-            future_predictions, label='Predictions', linestyle='--', marker='o'
-        )
-        plt.xlabel('Month-Year')
-        plt.ylabel('Resting Heart Rate (count/min)')
-        plt.title('Resting Heart Rate Prediction for the Next 2 Years')
-        plt.legend()
-        plt.show()
-
-
-# Provide the file path to your CSV file
-file_path = '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv'
-# Create an instance of RestingHeartRatePredictor
-predictor = RestingHeartRatePredictor(file_path)
+    def predict_heart_rate(self, fit_model, num_periods=24):  # Predict next 2 years (24 months)
+        if self.df is not None:
+            forecast = fit_model.get_forecast(steps=num_periods)
+            forecast_index = pd.date_range(self.df['endDate'].max() + pd.DateOffset(1), periods=num_periods, freq='M')
+            forecast_values = forecast.predicted_mean.values
+            return pd.DataFrame({'endDate': forecast_index, 'value': forecast_values})
 
 if __name__ == "__main__":
-    # Replace 'RestingHeartRate.csv' with the actual path to your CSV file
-    file_path = '/Users/hannahdesoto/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv'
+    analyzer = RestingHeartRateAnalyzer('/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/RestingHeartRate.csv')
+    analyzer.load_data()
+    analyzer.preprocess_data()
 
-    predictor = RestingHeartRatePredictor(file_path)
+    # Train ARIMA model
+    fit_model = analyzer.train_arima_model()
 
-# Perform analysis
-predictor.preprocess_data()
-predictor.cluster_data()
-predictor.visualize_clusters()
-predictor.train_regression_model()
-predictor.predict_future_heart_rate()
+    # Save the monthly average resting heart rates to an output file
+    output_file = '/path/to/output/average_heart_rates.csv'
+    analyzer.save_monthly_average_to_file(output_file)
 
-def xml_to_csv(xml_file, csv_file):
-    with open(xml_file, 'r') as f:
-        data_dict = xmltodict.parse(f.read())
+    # Plot the monthly average resting heart rates
+    analyzer.plot_monthly_average()
 
-    # Extract data from XML
-    data_list = data_dict['root']['record']
+    # Predict heart rates for the next 2 years
+    predictions = analyzer.predict_heart_rate(fit_model, num_periods=24)
 
-    # Convert to DataFrame
-
-def xml_to_dataframe(self, xml_file):
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-
-    # Extract data from XML and convert to DataFrame
-    data_list = []
-    for record in root.findall('.//record'):
-        data_list.append({
-            'creationDate': record.find('creationDate').text,
-            'value': float(record.find('value').text)
-        })
-
-
-    df = pd.DataFrame(data_list)
-
-    # Convert 'creationDate' to datetime
-    df['creationDate'] = pd.to_datetime(df['creationDate'])
-
-    return df
-
-if __name__ == "__main__":
-    # Replace 'input.xml' with the path to your XML file
-    xml_file_path = 'input.xml'
-
-    # Replace 'output.csv' with the desired CSV file name
-    csv_file_path = 'output.csv'
-
-    xml_to_csv(xml_file_path, csv_file_path)
+    print(predictions)
