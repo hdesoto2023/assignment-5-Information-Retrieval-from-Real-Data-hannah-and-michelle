@@ -50,13 +50,6 @@ class XMLDataExtractor:
                 elif record_type == "HKQuantityTypeIdentifierDistanceWalkingRunning":
                     self.distance_walking_running_data[start_time] = value
 
-    def download_blob(bucket_name, source_blob_name, destination_file_name):
-        """Downloads a blob from the bucket."""
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(bucket_name)
-        blob = bucket.blob(source_blob_name)
-        blob.download_to_filename(destination_file_name)
-
 class RestingHeartRateAnalyzer:
     def __init__(self, xml_data_extractor):
         self.xml_data_extractor = xml_data_extractor
@@ -147,6 +140,11 @@ if __name__ == "__main__":
     local_xml_file_path = 'export.xml'
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(gcs_bucket_name)
+    blob = bucket.blob(gcs_blob_name)
+    blob.download_to_filename(local_xml_file_path)
 
     # Download the XML file from Google Cloud Storage
     download_blob(gcs_bucket_name, gcs_blob_name, local_xml_file_path)
