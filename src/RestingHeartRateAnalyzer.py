@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class XMLDataExtractor:
     def __init__(self, xml_file_path):
-        self.xml_file_path = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/export.xml'
+        self.xml_file_path = xml_file_path
         self.root = None
         self.target_identifiers = ["HKQuantityTypeIdentifierRestingHeartRate", "HKQuantityTypeIdentifierBodyMass",
                                    "HKQuantityTypeIdentifierAppleExerciseTime", "HKQuantityTypeIdentifierBasalEnergyBurned",
@@ -129,7 +129,7 @@ class RestingHeartRateAnalyzer:
 
 
 if __name__ == "__main__":
-    xml_file_path = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/export.xml'
+    xml_file_path = 'gs://heart-export/export.xml'
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
