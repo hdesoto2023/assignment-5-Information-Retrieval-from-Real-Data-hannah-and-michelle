@@ -146,8 +146,6 @@ if __name__ == "__main__":
     blob = bucket.blob(gcs_blob_name)
     blob.download_to_filename(local_xml_file_path)
 
-    # Download the XML file from Google Cloud Storage
-    download_blob(gcs_bucket_name, gcs_blob_name, local_xml_file_path)
 
     # Use the XMLDataExtractor and RestingHeartRateAnalyzer as before
     xml_data_extractor = XMLDataExtractor(local_xml_file_path)
