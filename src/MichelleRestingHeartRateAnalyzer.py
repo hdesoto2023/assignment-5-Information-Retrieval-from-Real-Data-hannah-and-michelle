@@ -50,24 +50,6 @@ class XMLDataExtractor:
                 elif record_type == "HKQuantityTypeIdentifierDistanceWalkingRunning":
                     self.distance_walking_running_data[start_time] = value
 
-    def download_from_gcs(bucket_name, source_blob_name, destination_file_name):
-        """Downloads a blob from the bucket."""
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(bucket_name)
-        blob = bucket.blob(source_blob_name)
-
-        cloud_shell_home = os.path.expanduser("~")
-        destination_file_path = os.path.join(cloud_shell_home, destination_file_name)
-
-        blob.download_to_filename(destination_file_path)
-
-    bucket_name = "heart-export"
-    source_blob_name = "heart-export/export.xml"  # Path within the bucket
-    destination_file_name = "/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/export.xml"
-
-    download_from_gcs(bucket_name, source_blob_name, destination_file_name)
-
-
 class RestingHeartRateAnalyzer:
     def __init__(self, xml_data_extractor):
         self.xml_data_extractor = xml_data_extractor
@@ -150,7 +132,7 @@ class RestingHeartRateAnalyzer:
 
 
 if __name__ == "__main__":
-    xml_file_path = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/export.xml'
+    xml_file_path = 'gs://heart-export/export.xml'
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
