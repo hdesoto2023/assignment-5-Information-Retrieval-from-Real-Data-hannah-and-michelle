@@ -6,7 +6,7 @@ from google.cloud import storage
 
 
 class XMLDataExtractor:
-    def __init__(self, xml_file_path):
+    def __init__(self, xml_file_path, bucket_name, object_name):
         self.xml_file_path = xml_file_path
         self.root = None
         self.target_identifiers = ["HKQuantityTypeIdentifierRestingHeartRate", "HKQuantityTypeIdentifierBodyMass",
@@ -22,8 +22,20 @@ class XMLDataExtractor:
         self.active_energy_data = {}
         self.distance_swimming_data = {}
         self.distance_walking_running_data = {}
+        self.bucket_name = bucket_name
+        self.object_name = object_name
 
     def extract_data(self):
+        storage_client = storage.Client()
+
+        # Get the bucket
+        bucket = storage_client.bucket(self.bucket_name)
+
+        # Get the blob (object) from GCS
+        blob = bucket.blob(self.object_name)
+
+        # Download the content of the blob
+        content = blob.download_as_text()
         tree = ET.parse(self.xml_file_path)
         self.root = tree.getroot()
 
@@ -134,7 +146,7 @@ if __name__ == "__main__":
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
-    xml_data_extractor = XMLDataExtractor(xml_file_path)
+    xml_data_extractor = XMLDataExtractor(bucket_name='heart-export', object_name='export.xml')
     xml_data_extractor.extract_data()
 
     analyzer = RestingHeartRateAnalyzer(xml_data_extractor)
