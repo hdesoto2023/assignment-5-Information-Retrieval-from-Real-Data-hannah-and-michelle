@@ -2,6 +2,8 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
+from google.cloud import storage
+import os
 
 
 class XMLDataExtractor:
@@ -48,7 +50,6 @@ class XMLDataExtractor:
                     self.distance_swimming_data[start_time] = value
                 elif record_type == "HKQuantityTypeIdentifierDistanceWalkingRunning":
                     self.distance_walking_running_data[start_time] = value
-
 
 class RestingHeartRateAnalyzer:
     def __init__(self, xml_data_extractor):
@@ -132,11 +133,23 @@ class RestingHeartRateAnalyzer:
 
 
 if __name__ == "__main__":
-    xml_file_path = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/export.xml'
-    output_file = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshOGmonthlyaverageHR'
-    forecast_file = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/meeshforecastHR.csv'
+    # Set your Google Cloud Storage bucket details
+    gcs_bucket_name = 'heart-export'
+    gcs_blob_name = 'export.xml'
 
-    xml_data_extractor = XMLDataExtractor(xml_file_path)
+    # Local file paths
+    local_xml_file_path = 'export.xml'
+    output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
+    forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(gcs_bucket_name)
+    blob = bucket.blob(gcs_blob_name)
+    blob.download_to_filename(local_xml_file_path)
+
+
+    # Use the XMLDataExtractor and RestingHeartRateAnalyzer as before
+    xml_data_extractor = XMLDataExtractor(local_xml_file_path)
     xml_data_extractor.extract_data()
 
     analyzer = RestingHeartRateAnalyzer(xml_data_extractor)
