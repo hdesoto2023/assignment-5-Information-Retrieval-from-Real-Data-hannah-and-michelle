@@ -142,11 +142,11 @@ class RestingHeartRateAnalyzer:
 
     # Get the blob (object)
     blob = bucket.blob(object_name)
+    xml_content = blob
 
 
 if __name__ == "__main__":
     # Download the contents of the blob
-    xml_content = blob
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
