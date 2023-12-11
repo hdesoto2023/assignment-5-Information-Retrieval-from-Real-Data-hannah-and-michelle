@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 from io import StringIO
-from src.Prediction import RestingHeartRateAnalyzer
+from src.RestingHeartRateAnalyzer import RestingHeartRateAnalyzer
 
 class TestRestingHeartRateAnalyzer(unittest.TestCase):
 

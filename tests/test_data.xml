@@ -1,0 +1,9 @@
+<HealthData>
+    <Record type="HKQuantityTypeIdentifierRestingHeartRate" value="70" startDate="2023-01-01"/>
+    <Record type="HKQuantityTypeIdentifierRestingHeartRate" value="75" startDate="2023-02-01"/>
+    <Record type="HKQuantityTypeIdentifierRestingHeartRate" value="80" startDate="2023-03-01"/>
+    <Record type="HKQuantityTypeIdentifierRestingHeartRate" value="85" startDate="2023-04-01"/>
+    <Record type="HKQuantityTypeIdentifierRestingHeartRate" value="90" startDate="2023-05-01"/>
+    <Record type="HKQuantityTypeIdentifierRestingHeartRate" value="95" startDate="2023-06-01"/>
+</HealthData>
+
