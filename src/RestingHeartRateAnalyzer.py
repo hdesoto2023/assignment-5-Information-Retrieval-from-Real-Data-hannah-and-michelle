@@ -146,7 +146,7 @@ if __name__ == "__main__":
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
-    xml_data_extractor = XMLDataExtractor(bucket_name='heart-export', object_name='export.xml')
+    xml_data_extractor = XMLDataExtractor(xml_file_path='gs://heart-export/export.xml',bucket_name='heart-export', object_name='export.xml')
     xml_data_extractor.extract_data()
 
     analyzer = RestingHeartRateAnalyzer(xml_data_extractor)
