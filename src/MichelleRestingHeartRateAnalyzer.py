@@ -55,10 +55,9 @@ class XMLDataExtractor:
         storage_client = storage.Client()
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(source_blob_name)
-        blob.download_to_filename(destination_file_name)
 
-        home_directory = os.path.expanduser("~")
-        destination_file_path = os.path.join(home_directory, destination_file_name)
+        cloud_shell_home = os.path.expanduser("~")
+        destination_file_path = os.path.join(cloud_shell_home, destination_file_name)
 
         blob.download_to_filename(destination_file_path)
 
