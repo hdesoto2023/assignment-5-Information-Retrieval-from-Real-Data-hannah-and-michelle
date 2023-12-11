@@ -132,11 +132,27 @@ class RestingHeartRateAnalyzer:
 
 
 if __name__ == "__main__":
-    xml_file_path = 'gs://heart-export/export.xml'
+    from google.cloud import storage
+
+    # Create a storage client
+    client = storage.Client()
+
+    # Specify the bucket and object name
+    bucket_name = 'heart-export'
+    object_name = 'export.xml'
+
+    # Get the bucket
+    bucket = client.get_bucket(bucket_name)
+
+    # Get the blob (object)
+    blob = bucket.blob(object_name)
+
+    # Download the contents of the blob
+    xml_content = blob.download_as_text()
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
-    xml_data_extractor = XMLDataExtractor(xml_file_path)
+    xml_data_extractor = XMLDataExtractor(xml_content)
     xml_data_extractor.extract_data()
 
     analyzer = RestingHeartRateAnalyzer(xml_data_extractor)
