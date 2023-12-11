@@ -35,7 +35,7 @@ class XMLDataExtractor:
 
         # Download the content of the blob
         content = blob.download_as_text()
-        tree = ET.parse(self.xml_file_path)
+        tree = ET.ElementTree(ET.fromstring(content))
         self.root = tree.getroot()
 
         # Iterate through the 'Record' elements and extract the ones with the desired identifiers
