@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class XMLDataExtractor:
     def __init__(self, xml_file_path):
-        self.xml_file_path = xml_file_path
+        self.xml_file_path = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/export.xml'
         self.root = None
         self.target_identifiers = ["HKQuantityTypeIdentifierRestingHeartRate", "HKQuantityTypeIdentifierBodyMass",
                                    "HKQuantityTypeIdentifierAppleExerciseTime", "HKQuantityTypeIdentifierBasalEnergyBurned",
