@@ -57,6 +57,11 @@ class XMLDataExtractor:
         blob = bucket.blob(source_blob_name)
         blob.download_to_filename(destination_file_name)
 
+        home_directory = os.path.expanduser("~")
+        destination_file_path = os.path.join(home_directory, destination_file_name)
+
+        blob.download_to_filename(destination_file_path)
+
     bucket_name = "heart-export"
     source_blob_name = "heart-export/export.xml"  # Path within the bucket
     destination_file_name = "/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/export.xml"
