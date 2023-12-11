@@ -130,10 +130,6 @@ class RestingHeartRateAnalyzer:
             plt.xticks(rotation=45)
             plt.show()
 
-
-if __name__ == "__main__":
-    from google.cloud import storage
-
     # Create a storage client
     client = storage.Client()
 
@@ -147,8 +143,10 @@ if __name__ == "__main__":
     # Get the blob (object)
     blob = bucket.blob(object_name)
 
+
+if __name__ == "__main__":
     # Download the contents of the blob
-    xml_content = blob.download_as_text()
+    xml_content = blob
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
