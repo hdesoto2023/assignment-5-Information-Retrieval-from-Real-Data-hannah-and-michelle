@@ -61,6 +61,18 @@ class XMLDataExtractor:
                 elif record_type == "HKQuantityTypeIdentifierDistanceWalkingRunning":
                     self.distance_walking_running_data[start_time] = value
 
+    def download_xml_content(self):
+        storage_client = storage.Client()
+        bucket = storage_client.bucket(self.bucket_name)
+        blob = bucket.blob(self.object_name)
+        return blob.download_as_text()
+
+    def extract_data_generator(self):
+        xml_content = self.download_xml_content()
+        root = ET.fromstring(xml_content)
+
+        for element in root.iter('export.xml'):
+            yield element.text
 
 class RestingHeartRateAnalyzer:
     def __init__(self, xml_data_extractor):
@@ -145,6 +157,9 @@ if __name__ == "__main__":
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
     xml_data_extractor = XMLDataExtractor(bucket_name='heart-export', object_name='export.xml')
+    for data_item in xml_data_extractor.extract_data_generator():
+        print(data_item)
+
     xml_data_extractor.extract_data()
 
     analyzer = RestingHeartRateAnalyzer(xml_data_extractor)
