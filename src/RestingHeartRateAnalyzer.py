@@ -6,7 +6,8 @@ from google.cloud import storage
 
 
 class XMLDataExtractor:
-    def __init__(self, bucket_name, object_name):
+    def __init__(self, xml_file_path):
+        self.xml_file_path = xml_file_path
         self.root = None
         self.target_identifiers = ["HKQuantityTypeIdentifierRestingHeartRate", "HKQuantityTypeIdentifierBodyMass",
                                    "HKQuantityTypeIdentifierAppleExerciseTime", "HKQuantityTypeIdentifierBasalEnergyBurned",
@@ -21,21 +22,9 @@ class XMLDataExtractor:
         self.active_energy_data = {}
         self.distance_swimming_data = {}
         self.distance_walking_running_data = {}
-        self.bucket_name = bucket_name
-        self.object_name = object_name
 
     def extract_data(self):
-        storage_client = storage.Client()
-
-        # Get the bucket
-        bucket = storage_client.bucket(self.bucket_name)
-
-        # Get the blob (object) from GCS
-        blob = bucket.blob(self.object_name)
-
-        # Download the content of the blob
-        content = blob.download_as_text()
-        tree = ET.ElementTree(ET.fromstring(content))
+        tree = ET.parse(self.xml_file_path)
         self.root = tree.getroot()
 
         # Iterate through the 'Record' elements and extract the ones with the desired identifiers
@@ -61,18 +50,6 @@ class XMLDataExtractor:
                 elif record_type == "HKQuantityTypeIdentifierDistanceWalkingRunning":
                     self.distance_walking_running_data[start_time] = value
 
-    def download_xml_content(self):
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(self.bucket_name)
-        blob = bucket.blob(self.object_name)
-        return blob.download_as_text()
-
-    def extract_data_generator(self):
-        xml_content = self.download_xml_content()
-        root = ET.fromstring(xml_content)
-
-        for element in root.iter('export.xml'):
-            yield element.text
 
 class RestingHeartRateAnalyzer:
     def __init__(self, xml_data_extractor):
@@ -153,13 +130,11 @@ class RestingHeartRateAnalyzer:
 
 
 if __name__ == "__main__":
+    xml_file_path = '/Users/michellejee/Desktop/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/data/export.xml'
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
-    xml_data_extractor = XMLDataExtractor(bucket_name='heart-export', object_name='export.xml')
-    for data_item in xml_data_extractor.extract_data_generator():
-        print(data_item)
-
+    xml_data_extractor = XMLDataExtractor(xml_file_path)
     xml_data_extractor.extract_data()
 
     analyzer = RestingHeartRateAnalyzer(xml_data_extractor)
