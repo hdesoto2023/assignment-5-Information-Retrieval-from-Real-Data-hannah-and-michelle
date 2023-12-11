@@ -92,35 +92,28 @@ class RestingHeartRateAnalyzer:
             monthly_average_hr = self.calculate_monthly_average()
             monthly_average_hr['start_time'] = monthly_average_hr['start_time'].dt.to_timestamp()
 
-            # Fit an ARIMA model
             model = ARIMA(monthly_average_hr['heart_rate'], order=(1, 1, 1))
             fit_model = model.fit()
 
-            # Forecast the next 24 months
             forecast_values = fit_model.get_forecast(steps=24).predicted_mean
 
-            # Create a DataFrame for the forecast
             forecast_df = pd.DataFrame({
                 'start_time': pd.date_range(monthly_average_hr['start_time'].max() + pd.DateOffset(months=1),
                                             periods=24, freq='M'),
                 'heart_rate': forecast_values
             })
 
-            # Print the forecast to the terminal
             print("Monthly Average Resting Heart Rate Forecast:")
             print(forecast_df)
 
-            # Save the forecast to a file
             if forecast_file:
                 forecast_df.to_csv(forecast_file, index=False)
                 print(f"Forecast saved to {forecast_file}")
 
-            # Save the original monthly averages to a file
             if output_file:
                 monthly_average_hr.to_csv(output_file, index=False)
                 print(f"Original monthly average resting heart rates saved to {output_file}")
 
-            # Plot the original data and the forecast
             plt.figure(figsize=(10, 6))
             plt.plot(monthly_average_hr['start_time'], monthly_average_hr['heart_rate'],
                      marker='o', linestyle='-', color='b', label='Original Data')
