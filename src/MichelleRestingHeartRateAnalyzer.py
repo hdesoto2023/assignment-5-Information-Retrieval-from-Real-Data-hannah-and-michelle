@@ -50,6 +50,13 @@ class XMLDataExtractor:
                 elif record_type == "HKQuantityTypeIdentifierDistanceWalkingRunning":
                     self.distance_walking_running_data[start_time] = value
 
+    def download_blob(bucket_name, source_blob_name, destination_file_name):
+        """Downloads a blob from the bucket."""
+        storage_client = storage.Client()
+        bucket = storage_client.bucket(bucket_name)
+        blob = bucket.blob(source_blob_name)
+        blob.download_to_filename(destination_file_name)
+
 class RestingHeartRateAnalyzer:
     def __init__(self, xml_data_extractor):
         self.xml_data_extractor = xml_data_extractor
@@ -130,27 +137,22 @@ class RestingHeartRateAnalyzer:
             plt.xticks(rotation=45)
             plt.show()
 
-    # Create a storage client
-    client = storage.Client()
-
-    # Specify the bucket and object name
-    bucket_name = 'heart-export'
-    object_name = 'export.xml'
-
-    # Get the bucket
-    bucket = client.get_bucket(bucket_name)
-
-    # Get the blob (object)
-    blob = bucket.blob(object_name)
-    xml_content = blob
-
 
 if __name__ == "__main__":
-    # Download the contents of the blob
+    # Set your Google Cloud Storage bucket details
+    gcs_bucket_name = 'heart-export'
+    gcs_blob_name = 'export.xml'
+
+    # Local file paths
+    local_xml_file_path = 'export.xml'
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
-    xml_data_extractor = XMLDataExtractor(xml_content)
+    # Download the XML file from Google Cloud Storage
+    download_blob(gcs_bucket_name, gcs_blob_name, local_xml_file_path)
+
+    # Use the XMLDataExtractor and RestingHeartRateAnalyzer as before
+    xml_data_extractor = XMLDataExtractor(local_xml_file_path)
     xml_data_extractor.extract_data()
 
     analyzer = RestingHeartRateAnalyzer(xml_data_extractor)
