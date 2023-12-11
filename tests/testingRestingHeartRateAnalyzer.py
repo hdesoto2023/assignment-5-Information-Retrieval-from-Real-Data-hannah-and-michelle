@@ -2,7 +2,7 @@ import unittest
 import xml.etree.ElementTree as ET
 import pandas as pd
 import os
-from src.RestingHeartRateAnalyzer import *
+from src.MichelleRestingHeartRateAnalyzer import *
 
 
 class TestXMLDataExtractor(unittest.TestCase):
