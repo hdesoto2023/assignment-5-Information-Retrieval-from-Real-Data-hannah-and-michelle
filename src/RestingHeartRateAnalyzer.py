@@ -141,7 +141,6 @@ class RestingHeartRateAnalyzer:
 
 
 if __name__ == "__main__":
-    xml_file_path = 'gs://heart-export/export.xml'
     output_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshMonthlyAvg.csv'
     forecast_file = '/Users/michellejee/PycharmProjects/assignment-5-Information-Retrieval-from-Real-Data-hannah-and-michelle/out/MeeshForecast.csv'
 
