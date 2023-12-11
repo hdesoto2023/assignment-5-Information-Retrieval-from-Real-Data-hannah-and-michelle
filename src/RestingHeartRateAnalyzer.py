@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
+from google.cloud import storage
 
 
 class XMLDataExtractor:
