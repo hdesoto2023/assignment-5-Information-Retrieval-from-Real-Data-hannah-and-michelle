@@ -1,6 +1,6 @@
-** Assignment-5-Information-Retrieval-from-Real-Data
+##### ** Assignment-5-Information-Retrieval-from-Real-Data
 
-## Apple Health Data Analysis Using Resting Heart Rate
+# Apple Health Data Analysis Using Resting Heart Rate
 
 ## Team Members
 
@@ -10,14 +10,13 @@
 - **Michelle Jee**
   - Email: mjee@westmont.edu
 
-## Table of Contents
-
-1. **Introduction**
+  
+##  **Introduction**
 
 Our Python script aims to analyze health data exported from Apple Health using the resting heart rate metric. It performs data extraction from an XML file, processes the data, calculates the monthly average resting heart rate, and forecasts the next 24 months using ARIMA (AutoRegressive Integrated Moving Average) time series forecasting.
 
 
-2. **Installation** 
+## **Installation** 
 
 Make sure these packages are installed below: 
 
@@ -25,7 +24,7 @@ Prerequisites
 Python 3.x
 Required Python packages: xml.etree.ElementTree, pandas, statsmodels, matplotlib
 
-3. **Usage**
+## **Usage**
     - Ensure that the required Python packages are enstalled by running 
     - Modify the script's main section with your specified paths:
       
@@ -38,7 +37,7 @@ Required Python packages: xml.etree.ElementTree, pandas, statsmodels, matplotlib
       python3 HDRestingHeartRateAnalyzer.py
 
 
-4. **Code Structure**
+## **Code Structure**
 
 XMLDataExtractor Class
 
@@ -53,7 +52,7 @@ Using an instance of 'XMLDataExtractor', this class process the extracted data a
 converts it into a pandas DataFrame. Then, it calculates the monthly average 
 resting heart rate, and provides methods to visualize and forecast the data. 
 
-5. **Licensing Information**
+## **Licensing Information**
 
 MIT License
 
@@ -77,7 +76,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-7. **Sources Cited**
+## **Sources Cited**
+
+#### ChatGPT Citation:
+    - OpenAI. "ChatGPT - OpenAI's Language Model." OpenAI, https://www.openai.com/.
+    - Prompt: What are some ways to process XML files
+      - DOM (Document Object Model, ET.parsing)
+      - SAX (Simple API for XML)
+      - lxml (Python Library)
+      - XPath (XML Path Language)
+      - XSLT (XML Stylesheet Language Transformations)
+#### Python Library: 
+    - Link: https://docs.python.org/3/library/xml.etree.elementtree.html
+    - Understanding how to use ET.parse()
+    - The different features of Element Tree
+#### ARIMA: 
+    - Link: https://machinelearningmastery.com/arima-for-time-series-forecasting-with-python/
+    - Plotting graphs for forecasting
+    - Finding the monthly average for the data
+
+
+
 
 ## How to Contribute
 
@@ -88,8 +107,8 @@ If you're interested in contributing to this project, please follow these steps:
 3. Make your changes and submit a pull request.
 4. Ensure your code passes any existing tests.
 
-## Contact Information
 
+## Contact Information
 For any inquiries or collaboration opportunities, please reach out to:
 
 - **Hannah DeSoto**
@@ -98,4 +117,4 @@ For any inquiries or collaboration opportunities, please reach out to:
 - **Michelle Jee**
   - Email: mjee@westmont.edu
 
-Thank you for your interest in our project!
+### Thank you for your interest in our project!
