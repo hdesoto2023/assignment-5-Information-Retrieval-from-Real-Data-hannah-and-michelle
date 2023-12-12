@@ -1,8 +1,6 @@
-# Assignment-5-Information-Retrieval-from-Real-Data
+** Assignment-5-Information-Retrieval-from-Real-Data
 
-## Project Overview
-
-This project focuses on Information Retrieval from Real Data and is a collaborative effort by Hannah DeSoto and Michelle Jee. The primary goal is to demonstrate the application of information retrieval techniques on real-world data.
+## Apple Health Data Analysis Using Resting Heart Rate
 
 ## Team Members
 
@@ -15,34 +13,71 @@ This project focuses on Information Retrieval from Real Data and is a collaborat
 ## Table of Contents
 
 1. **Introduction**
-   - Brief overview of the project and its objectives.
 
-2. **Installation**
-   - Instructions on how to set up and install the project dependencies.
+Our Python script aims to analyze health data exported from Apple Health using the resting heart rate metric. It performs data extraction from an XML file, processes the data, calculates the monthly average resting heart rate, and forecasts the next 24 months using ARIMA (AutoRegressive Integrated Moving Average) time series forecasting.
+
+
+2. **Installation** 
+
+Make sure these packages are installed below: 
+
+Prerequisites
+Python 3.x
+Required Python packages: xml.etree.ElementTree, pandas, statsmodels, matplotlib
 
 3. **Usage**
-   - Guidance on how to use the project, including any command-line parameters or configuration settings.
+    - Ensure that the required Python packages are enstalled by running 
+    - Modify the script's main section with your specified paths:
+      
+   xml_file_path = '/path/to/your/health/data.xml' 
+      
+   output_file = '/path/to/your/output/original_data.csv'
+   
+   forecast_file = '/path/to/your/output/forecast_data.csv'
+    - Run the script
+      python3 HDRestingHeartRateAnalyzer.py
 
-4. **Data Retrieval**
-   - Explanation of the methods and techniques used for retrieving real-world data for analysis.
 
-5. **Information Retrieval Techniques**
-   - Overview of the information retrieval techniques employed in the project.
+4. **Code Structure**
 
-6. **Results**
-   - Presentation and analysis of the results obtained from the information retrieval process.
+XMLDataExtractor Class
 
-7. **Conclusion**
-   - Summary of the key findings and insights derived from the project.
+This class works to extract the relevant health data from an XML file exported 
+from Apple Health. It initializes dictionaries for different health metrics and 
+uses the method 'extract_data' to parse the XML file and store the data in these 
+dictionaries. 
 
-8. **Contributing**
-   - Guidelines for external contributors, if applicable.
+RestingHeartRateAnalyzer Class
 
-9. **Issues**
-   - Information on known issues or challenges with the project.
+Using an instance of 'XMLDataExtractor', this class process the extracted data and 
+converts it into a pandas DataFrame. Then, it calculates the monthly average 
+resting heart rate, and provides methods to visualize and forecast the data. 
 
-10. **Contact**
-    - How to reach out to the team members for questions, feedback, or collaboration opportunities.
+5. **Licensing Information**
+
+MIT License
+
+Copyright (c) 2023 hdesoto2023
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+7. **Sources Cited**
 
 ## How to Contribute
 
